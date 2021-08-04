@@ -2,8 +2,6 @@ import pandas as pd
 import requests
 import math
 from bs4 import BeautifulSoup
-from .categories import Category
-from .listings import Listing
 
 
 class ScraperError(Exception):
@@ -51,36 +49,9 @@ class eBay:
                 link = item.select_one(".s-item__link")["href"]
                 image_url = item.select_one(".s-item__image-img")['src']
                 price = item.select_one(".s-item__price").text
-                data.append({"title": title,"price": price, "item_url": link, "image_url": image_url})
+                data.append({"title": title,"price": price, "item_url": link, "image_url": image_url, "category": keyword})
             self.__dataframe = pd.DataFrame(data)
             return self.__dataframe[:quantity]
         except ScraperError:
             raise ScraperError("System encountered a problem when scraping the site."
                                "Please ensure that you have passed in a relevant keyword and quantity")
-
-    def add_category_to_database(self):
-        """
-        adds the scraped category to the Category Database
-        :return: category successfully added message
-        """
-        try:
-            category_database = Category()
-            category_database.add(self.__keyword)
-            print(f".......{self.__keyword} category successfully added to Database.......")
-            self.__category_id = category_database.get_by_name(self.__keyword)[0]
-        except ScraperError:
-            raise ScraperError(f"Category {self.__keyword} is already in the database")
-
-    def add_listings_to_database(self):
-        """
-        adds scraped listings of keyword to listings database
-        :return: listings successfully added message.
-        """
-        try:
-            self.__dataframe['category_id'] = [self.__category_id for each_element in range(len(self.__dataframe))]
-            listing_database = Listing()
-            listing_database.add(self.__dataframe)
-            print(f"........{self.__keyword} listings successfully added to Database.......")
-        except ScraperError:
-            raise ScraperError("This listing is already in the database")
-
