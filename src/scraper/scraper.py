@@ -35,7 +35,7 @@ class eBay:
             self.__productlist = []
             data = []
             number_of_pages_to_scrape = math.ceil(quantity / 64)
-            for page in range(1, number_of_pages_to_scrape+2):
+            for page in range(1, number_of_pages_to_scrape+3):
                 if page == 0 or page == 1:
                     next_page = baseurl
                 else:
