@@ -2,8 +2,8 @@ import pandas as pd
 import requests
 import math
 from bs4 import BeautifulSoup
-from src.categories import Category
-from src.listings import Listing
+from categories import Category
+from listings import Listing
 
 
 class ScraperError(Exception):
